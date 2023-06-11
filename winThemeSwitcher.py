@@ -1,7 +1,7 @@
 # Import the required libraries
-import platform, sys, getopt, jumplists
-from subprocess import run, DEVNULL
-from pathlib import Path
+import platform, sys, getopt
+import jumplists as jl
+from subprocess import run, DETACHED_PROCESS
 from darkdetect import isLight
 
 # OS guard conditions
@@ -59,7 +59,7 @@ def mode_set(mode: int | str):
             f"Parameter 'mode' must be either 0 or 1! Provided value: {mode}"
         )
     for themeType in themeTypes:
-        run(eval(command), stdout=DEVNULL, stderr=DEVNULL)
+        run(eval(command), creationflags=DETACHED_PROCESS)
 
 
 # Set Dark theme
@@ -77,13 +77,22 @@ def mode_toggle():
     mode_dark() if isLight() else mode_light()
 
 
-# Initialise switcher
-def init():
-    ...
+# Setup jumplist
+def init_jl():
+    jumplist = jl.JumpList()
+    tasks = jumplist.tasks
+    links = {"Toggle": "-t", "Dark Mode": "-d", "Light Mode": "-l"}
+    args = []
+    if not getattr(sys, "frozen", False):
+        args.append(__file__)
+    for name, opt in links.items():
+        link = jl.JumpListItemLink(name, sys.executable, args + [opt])
+        tasks.add_item(link)
+    tasks.visible = True
+    jumplist.update()
 
 
 def main(argv):
-    # init()
     opts, args = [], []
     try:
         opts, args = getopt.getopt(argv, "hvtdl")
@@ -114,4 +123,5 @@ def main(argv):
 
 
 if __name__ == "__main__":
+    init_jl()
     main(sys.argv[1:])
