@@ -12,17 +12,18 @@ Switch between Dark Mode and Light Mode in Windows
 
 ### CLI Usage
 
-winThemeSwitcher [ -h | -v | -t | -d | -l ]
+`winThemeSwitcher [ -h | -v | -t | -d | -l ]`
 
 If no options are passed, defaults to Toggle
 
 ### CLI Options
-
--h    Display help and exit
--v    Display version info and exit
--t    Toggle current theme
--d    Switch to Dark Mode
--l    Switch to Light Mode
+| Option | Description                   |
+|--------|-------------------------------|
+| `-h`   | Display help and exit         |
+| `-v`   | Display version info and exit |
+| `-t`   | Toggle current theme          |
+| `-d`   | Switch to Dark Mode           |
+| `-l`   | Switch to Light Mode          |
 
 ## Dependencies
 
