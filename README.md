@@ -2,6 +2,8 @@
 
 Windows 10 app to toggle the system color theme (light/dark).
 
+A standalone System Tray version is also available ([Windows Theme Switcher Tray](https://github.com/malijaffri/winThemeTray)).
+
 ## Usage
 
 The default action on running the executable is to toggle the system Dark Mode. If Light Mode or Dark Mode is explicitly required, it can be selected from the app's Jump List (Windows Start Menu or Taskbar context menu (right-click menu) for the app).
