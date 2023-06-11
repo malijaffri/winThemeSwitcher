@@ -4,8 +4,6 @@ import sys
 from subprocess import run, DEVNULL
 from pathlib import Path
 from darkdetect import isLight
-from PIL import Image
-from pystray import Icon, MenuItem
 
 # OS guard conditions
 error = OSError("This script only runs on Windows 10!")
@@ -15,6 +13,7 @@ elif platform.release() != "10":
     raise error
 
 
+"""
 # Get resources
 def resource_path(relative_path):
     try:
@@ -27,6 +26,7 @@ def resource_path(relative_path):
 
 # Image file path
 imgpath = resource_path("favicon.ico")
+"""
 
 # Theme variable names
 themeTypes = ("SystemUsesLightTheme", "AppsUseLightTheme")
@@ -35,8 +35,8 @@ themeTypes = ("SystemUsesLightTheme", "AppsUseLightTheme")
 # Use with `eval`
 #
 # Vars used:
-#   `mode`: str, '0' or '1'
-#   `themeType`: str, one of `themeTypes`
+# - `mode`: str, '0' or '1'
+# - `themeType`: str, one of `themeTypes`
 command = '["reg.exe", "add", "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "/v", themeType, "/t", "REG_DWORD", "/d", mode, "/f"]'
 
 
@@ -52,36 +52,33 @@ def mode_set(mode: int | str):
 
 
 # Set Dark theme
-def mode_light(icon: Icon | None = None, item: MenuItem | None = None):
+def mode_light():
     mode_set(1)
 
 
 # Set Dark theme
-def mode_dark(icon: Icon | None = None, item: MenuItem | None = None):
+def mode_dark():
     mode_set(0)
 
 
 # Toggle current theme
-def mode_toggle(icon: Icon, item: MenuItem):
+def mode_toggle():
     mode_dark() if isLight() else mode_light()
-
-
-# Quit the app
-def quit_app(icon: Icon, item: MenuItem):
-    icon.stop()
 
 
 # Initialise switcher
 def init():
-    image = Image.open(imgpath)
-    menu = (
-        MenuItem("Toggle", mode_toggle, default=True),
-        MenuItem("Light Mode", mode_light),
-        MenuItem("Dark Mode", mode_dark),
-        MenuItem("Quit", quit_app),
-    )
-    icon: Icon = Icon("Windows Theme Switcher", image, "Windows Theme Switcher", menu)
-    icon.run()
+    """
+    Pseudo-code
+
+    if run normally or jumplist.selected == "Toggle":
+        mode_toggle()
+    elif jumplist.selected == "Dark Mode":
+        mode_dark()
+    else:
+        mode_light()
+    """
+    ...
 
 
 init()
