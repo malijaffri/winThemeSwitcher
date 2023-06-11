@@ -1,31 +1,37 @@
 # Import the required libraries
-import platform
-import sys
+import platform, sys, getopt, jumplists
 from subprocess import run, DEVNULL
 from pathlib import Path
 from darkdetect import isLight
 
 # OS guard conditions
-error = OSError("This script only runs on Windows 10!")
+platerror = OSError("This script only runs on Windows 10!")
 if platform.system() != "Windows":
-    raise error
+    raise platerror
 elif platform.release() != "10":
-    raise error
+    raise platerror
 
 
-"""
-# Get resources
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = Path(__file__).parent.resolve()
+# Version
+version = "v0.1.0"
 
-    return Path(base_path).joinpath(relative_path).resolve()
+# Help string
+helpstr = f"""
+winThemeSwitcher {version}
 
+Switch between Dark Mode and Light Mode in Windows
 
-# Image file path
-imgpath = resource_path("favicon.ico")
+Usage:
+winThemeSwitcher [ -h | -v | -t | -d | -l ]
+
+If no options are passed, defaults to Toggle
+
+Options:
+-h    Display this help and exit
+-v    Display version info and exit
+-t    Toggle current theme
+-d    Switch to Dark Mode
+-l    Switch to Light Mode
 """
 
 # Theme variable names
@@ -38,6 +44,11 @@ themeTypes = ("SystemUsesLightTheme", "AppsUseLightTheme")
 # - `mode`: str, '0' or '1'
 # - `themeType`: str, one of `themeTypes`
 command = '["reg.exe", "add", "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "/v", themeType, "/t", "REG_DWORD", "/d", mode, "/f"]'
+
+
+def error():
+    print(helpstr)
+    sys.exit(2)
 
 
 # Set color mode
@@ -68,17 +79,39 @@ def mode_toggle():
 
 # Initialise switcher
 def init():
-    """
-    Pseudo-code
-
-    if run normally or jumplist.selected == "Toggle":
-        mode_toggle()
-    elif jumplist.selected == "Dark Mode":
-        mode_dark()
-    else:
-        mode_light()
-    """
     ...
 
 
-init()
+def main(argv):
+    # init()
+    opts, args = [], []
+    try:
+        opts, args = getopt.getopt(argv, "hvtdl")
+    except getopt.GetoptError:
+        error()
+    if len(opts) > 1:
+        error()
+    if args:
+        error()
+    if not opts:
+        mode_toggle()
+        sys.exit()
+    opt, arg = opts[0]
+    match opt:
+        case "-h":
+            print(helpstr)
+        case "-v":
+            print(version)
+        case "-t":
+            mode_toggle()
+        case "-d":
+            mode_dark()
+        case "-l":
+            mode_light()
+        case _:
+            error()
+    sys.exit()
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
